@@ -1,0 +1,1078 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>北海学園札幌高校｜2025 ドッジボール大会（管理用）</title>
+
+<style>
+:root {
+  --primary: #0a3d8f;
+  --primary-dark: #062a63;
+  --accent: #ffd24c;
+  --mint: #2ec4b6;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --shadow: 0 10px 24px rgba(0,0,0,.08);
+  --radius: 16px;
+  --fast: .25s ease;
+
+  /* 追加（トーナメント線色） */
+  --line-gray: #4b5a78;
+  --line-active: #c8142e;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+  color: #1e2a3a;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(10,61,143,.10), transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(6,42,99,.10), transparent 45%),
+    radial-gradient(100px 100px at 15% 85%, rgba(46,196,182,.10), transparent 50%),
+    var(--bg);
+}
+
+/* ヘッダー */
+header {
+  position: relative; text-align: center; padding: 56px 20px 36px; color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark) 70%);
+  border-bottom: 6px solid var(--accent);
+  overflow: hidden; box-shadow: var(--shadow);
+}
+header h1 { margin: 0 0 4px 0; font-weight: 900; letter-spacing: .06em; font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
+header p { margin: 8px 0 0; opacity: .95; }
+header::after {
+  content: ""; position: absolute; left: -80px; bottom: -40px; width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8ab5ff 10%, #5e8fe6 35%, #2e5fbf 60%, #204da3 100%);
+  box-shadow: 0 12px 24px rgba(0,0,0,.18);
+  animation: bounce 4.2s cubic-bezier(.25,.75,.35,1) infinite; opacity: .9;
+}
+@keyframes bounce {
+  0%   { transform: translate(0, 0) scale(1); }
+  30%  { transform: translate(40vw, -120px) scale(.98); }
+  50%  { transform: translate(60vw, 0) scale(1.03); }
+  80%  { transform: translate(100vw, -160px) scale(.96); }
+  100% { transform: translate(120vw, 0) scale(1); }
+}
+
+/* ロゴ領域 */
+.brand-wrap { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; }
+.brand-logo { width: min(420px, 80%); aspect-ratio: 16/5; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,.15)); }
+.fallback-logo { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(2px); }
+.fallback-logo .ball { width: 32px; height: 32px; border-radius: 50%; background: #cfe0ff; box-shadow: inset 0 0 0 4px #b8d1ff; position: relative; }
+.fallback-logo .ball::before, .fallback-logo .ball::after { content:""; position: absolute; inset: 0; border-radius: 50%; border: 3px solid #8ab5ff; mix-blend-mode: multiply; }
+.fallback-logo .title { font-weight: 900; letter-spacing: .08em; }
+
+/* ナビ（5タブ） */
+.nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 22px auto; max-width: 1240px; padding: 0 16px; }
+.nav-item {
+  background: #eaf0fb; border: 2px solid transparent; color: #0b2e6b;
+  padding: 14px 12px; text-align: center; border-radius: 14px; font-weight: 800; cursor: pointer;
+  box-shadow: var(--shadow); transition: transform var(--fast), background var(--fast), border-color var(--fast);
+}
+.nav-item:hover { transform: translateY(-3px); background: #dbe6fb; border-color: #a9c2ff; }
+.nav-item.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* 本文 */
+main { max-width: 1240px; margin: 0 auto; padding: 0 16px 40px; }
+.section-title { font-size: 1.2rem; margin: 32px 0 8px; color: var(--primary); font-weight: 900; letter-spacing: .02em; display: flex; align-items: center; gap: 8px; }
+.section-title .dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 6px rgba(255,210,76,.18); }
+
+.card, .box { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; margin-top: 16px; }
+.card { border: 2px solid #d9e4ff; }
+.box  { border: 2px solid #e3ebff; overflow-x: auto; }
+
+/* PDF 表示 */
+#pdf-viewer { width: 100%; height: 780px; border-radius: 14px; border: 3px solid #primary; display: none; margin-top: 10px; }
+.upload-area { border: 3px dashed var(--primary); background: #f6f9ff; text-align: center; padding: 22px; border-radius: 12px; }
+
+/* 入力コンポーネント */
+.input { padding: 10px 12px; border-radius: 10px; border: 2px solid #c8d7ff; background: #fff; }
+.input.short { width: 90px; text-align: center; }
+.tt-time { width: 92px; padding: 6px 8px; border-radius: 10px; border: 2px solid #c8d7ff; background: #fff; font-weight: 700; color: #0b2e6b; }
+
+/* 追加：コート名の編集スタイル */
+.court-name[contenteditable="true"] {
+  padding: 2px 6px;
+  border-radius: 8px;
+  outline: none;
+  border: 2px dashed transparent;
+}
+.court-name[contenteditable="true"]:focus {
+  border-color: #a9c2ff;
+  background: #eef4ff;
+}
+
+/* ボタン */
+.btn { padding: 10px 18px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: transform var(--fast), filter var(--fast); }
+.btn-add { background: var(--primary); color: #fff; }
+.btn-add:hover { transform: translateY(-2px) scale(1.02); filter: brightness(1.05); }
+.btn-del { background: #6b1020; color: #fff; }
+.btn-ghost { background: #eef3ff; color: #0b2e6b; }
+.btn-save { width: 100%; margin-top: 28px; padding: 20px; font-size: 1.1rem; background: linear-gradient(90deg, var(--accent), #ffcc66); color: #4a3600; border: 2px solid #ffe285; }
+
+/* スコア入力（対戦表） */
+.score-input { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #bcd0ff; text-align: center; font-weight: 900; font-size: 1.05rem; box-shadow: inset 0 0 0 4px #eef4ff; }
+.team-name { border-radius: 12px; border: 2px solid #e0e9ff; padding: 6px 8px; font-weight: 700; }
+
+/* VSグリッド */
+.vs-grid { display: grid; grid-template-columns: 1fr 50px 30px 50px 1fr; align-items: center; gap: 6px; }
+
+/* 表共通 */
+table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+th, td { border: 1px solid #e3e7ef; padding: 10px 8px; text-align: center; }
+th { background: #f0f4ff; color: var(--primary); font-weight: 800; }
+.summary-col { background: #fffdf0; font-weight: 900; }
+.res-symbol { font-weight: 900; color: var(--primary); }
+.res-score { color: #666; font-size: .86rem; }
+
+/* ===== トーナメント（従来の箱＋拡張） ===== */
+.tournament-container {
+  position: relative;  /* ← SVG配置用 */
+  display: flex; gap: 40px; padding: 30px 10px;
+  background: #fff; overflow: auto; align-items: flex-start;
+  min-height: 420px; border-radius: 14px; border:2px solid #d9e4ff; box-shadow: var(--shadow);
+}
+.bracket-column { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-width: 220px; }
+
+/* 旧やぐらの疑似線はOFF（SVGで描くため） */
+.match-wrap::after { display: none !important; }
+
+/* 新マッチボックス */
+.t-match {
+  width: 220px;
+  background: #fff;
+  border: 2px solid #4b5a78;
+  border-radius: 12px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+.t-row { display:flex; align-items:center; gap:6px; padding: 8px; border-bottom: 1px solid #e6eefb; }
+.t-row:last-child { border-bottom: none; }
+
+.t-name { flex:1; min-width:0; }
+.t-name input { width:100%; padding:6px 8px; border:2px solid #e0e9ff; border-radius:8px; font-weight:700; }
+
+.t-score { width:56px; height:32px; border-radius:8px; border:2px solid #c8d7ff; text-align:center; font-weight:900; }
+
+.t-win { width: 40px; height: 32px; border-radius: 8px; border: 2px solid #c8d7ff; background: #eef3ff; cursor: pointer; font-weight: 900; }
+.t-win:hover { filter: brightness(1.05); }
+.t-row.win { background:#fff6f7; }
+
+/* SVG ライン */
+#t-svg { position:absolute; inset:0; pointer-events:none; }
+.conn { stroke: var(--line-gray); stroke-width: 2.2; fill: none; }
+.conn.active { stroke: var(--line-active); stroke-width: 3.2; filter: drop-shadow(0 0 2px rgba(200,20,46,.35)); }
+
+/* 結果（編集UI） */
+.result-toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.result-section { border: 2px solid #d9e4ff; border-radius: 16px; box-shadow: var(--shadow); padding: 16px; margin-top: 16px; background:#fff; }
+.result-head { display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap; }
+.result-title { display:flex; gap:10px; align-items:center; }
+.result-title input { font-weight:900; min-width: 220px; }
+.result-table { width:100%; border-collapse: collapse; margin-top:10px; }
+.result-table th, .result-table td { border:1px solid #e3e7ef; padding:8px; text-align:left; }
+.result-table th { background:#f0f4ff; color:var(--primary); }
+.rank-label { width: 180px; }
+.rank-value { width: 100%; }
+.result-actions { display:flex; gap:8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  header::after, .nav-item:hover { animation: none !important; transform: none !important; }
+}
+
+.hidden { display: none; }
+.notice{padding:14px;border-radius:12px;background:#fff7d6;border:2px solid #ffe9a3;color:#4a3600;font-weight:700}
+
+/* ===== ロック（既存） ===== */
+#lock-overlay {
+  position: fixed; inset: 0; z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(220px 220px at 20% 15%, rgba(10,61,143,.12), transparent 40%),
+    radial-gradient(260px 260px at 80% 20%, rgba(6,42,99,.10), transparent 45%),
+    radial-gradient(200px 200px at 50% 85%, rgba(46,196,182,.12), transparent 50%),
+    rgba(8,16,32,.85);
+  backdrop-filter: blur(4px);
+}
+.lock-card {
+  width: min(560px, 92%); padding: 28px 22px; border-radius: 18px;
+  background: #ffffff; box-shadow: 0 18px 40px rgba(0,0,0,.25); border: 2px solid #d9e4ff;
+}
+.lock-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: var(--primary-dark); }
+.lock-head h2 { margin: 0; font-size: clamp(1.1rem, 2.6vw, 1.4rem); letter-spacing: .02em; }
+.lock-desc { margin: 0 0 12px; color: #3b4d6b; font-size: .95rem; }
+.lock-field { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.lock-input { padding: 12px 14px; border: 2px solid #c8d7ff; border-radius: 12px; font-size: 1rem; }
+.lock-btn { padding: 12px 16px; border: none; border-radius: 12px; font-weight: 800; background: var(--primary); color: #fff; cursor: pointer; }
+.lock-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.lock-footer { display:flex; align-items:center; justify-content: space-between; margin-top: 10px; color:#3b4d6b; font-size: .9rem; }
+.lock-msg { color: #8b0f1a; font-weight: 700; min-height: 1.2em; }
+.eye-toggle { background: #eef3ff; color:#0b2e6b; border: 2px solid #c8d7ff; border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+.shake { animation: shake .25s linear 0s 2; }
+@keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 75%{transform:translateX(-4px)} 100%{transform:translateX(0)} }
+
+/* アプリ本体は初期非表示 */
+#app-root { visibility: hidden; }
+</style>
+</head>
+
+<body>
+  <!-- ===== ロックオーバーレイ ===== -->
+  <div id="lock-overlay" aria-modal="true" role="dialog">
+    <div class="lock-card" id="lock-card">
+      <div class="lock-head">
+        <div style="width:18px;height:18px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 8px rgba(255,210,76,.2)"></div>
+        <h2>管理用ページ｜パスワード入力</h2>
+      </div>
+      <p class="lock-desc">このページは大会運営用です。パスワードを入力してください。</p>
+      <div class="lock-field">
+        <input id="lock-input" class="lock-input" type="password" placeholder="パスワード" autocomplete="current-password" />
+        <button id="lock-submit" class="lock-btn">入室する</button>
+      </div>
+      <div class="lock-footer">
+        <span id="lock-msg" class="lock-msg"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button id="eye-toggle" class="eye-toggle" type="button" aria-pressed="false">👁 表示</button>
+          <span id="caps-hint" style="display:none;color:#9b5a00;font-weight:700">Caps Lock がオンです</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== アプリ本体 ===== -->
+  <div id="app-root">
+  <header>
+    <h1 contenteditable="true">2025年度 ドッジボール大会</h1>
+    <p>北海学園札幌高等学校｜大会運営・自動集計システム（管理用）</p>
+
+    <div class="brand-wrap">
+      <!-- ロゴは任意 -->
+      <span id="fallbackLogo" class="fallback-logo">
+        <span class="ball"></span>
+        <span class="title">2025 DODGEBALL</span>
+      </span>
+    </div>
+  </header>
+
+  <nav class="nav-grid">
+    <div id="btn-home" class="nav-item active" onclick="showPage('home-page')">大会要項（PDF）</div>
+    <div id="btn-match" class="nav-item" onclick="showPage('match-page')">対戦表（入力）</div>
+    <div id="btn-league" class="nav-item" onclick="showPage('league-page')">リーグ戦（順位）</div>
+    <div id="btn-tournament" class="nav-item" onclick="showPage('tournament-page')">決勝トーナメント</div>
+    <div id="btn-results" class="nav-item" onclick="showPage('results-page')">結果（公開用）</div>
+  </nav>
+
+  <main>
+    <!-- PDF ページ -->
+    <section id="home-page">
+      <h2 class="section-title"><span class="dot"></span> 📄 大会要項アップロード</h2>
+      <div class="card upload-area" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <input type="file" id="pdf-input" accept="application/pdf" onchange="handleFileSelect(this)" />
+        <button id="pdf-delete-btn" class="btn btn-del" style="display:none" onclick="removePdf()">🗑 PDFを削除</button>
+        <p style="font-size:.9rem;color:#3b4d6b;margin:.5rem 0 0;">PDFをアップロードすると下に表示され、保存すると次回も自動表示されます。</p>
+      </div>
+      <iframe id="pdf-viewer"></iframe>
+    </section>
+
+    <!-- 対戦ページ -->
+    <section id="match-page" class="hidden">
+      <h2 class="section-title"><span class="dot"></span> 🔥 対戦表・スコア入力</h2>
+      <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <input id="ttName" class="input" placeholder="種目名（例：男子ドッジ／女子ドッジ／MIX）" />
+        <input id="ttVenueCount" type="number" class="input short" value="3" placeholder="コート数" />
+        <input id="ttRows" type="number" class="input short" value="12" placeholder="試合枠" />
+        <!-- ★ 追加：コート名入力（カンマ区切り） -->
+        <input id="ttVenueNames" class="input" style="min-width:260px" placeholder="コート名（例：A,B,C）" />
+        <button class="btn btn-add" onclick="createTimetable()">＋ 対戦表を作成</button>
+      </div>
+      <div id="matchWrapper"></div>
+    </section>
+
+    <!-- リーグ戦ページ -->
+    <section id="league-page" class="hidden">
+      <h2 class="section-title"><span class="dot"></span> 📊 リーグ戦（自動集計）</h2>
+      <div id="leagueWrapper"></div>
+    </section>
+
+    <!-- トーナメントページ -->
+    <section id="tournament-page" class="hidden">
+      <h2 class="section-title"><span class="dot"></span> 🏆 決勝トーナメント</h2>
+      <div class="card" style="background:#f7fbff;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <label><b>進出チーム数：</b></label>
+        <input id="t-count-input" type="number" class="input short" value="6" min="2" />
+        <button class="btn btn-add" onclick="generateFlexibleBracket()">枠を生成</button>
+        <span style="font-size:.9rem;color:#3b4d6b">（余りは <b>(シード)</b> として自動処理）</span>
+      </div>
+
+      <div id="tournamentWrapper" class="tournament-container">
+        <!-- SVG lines -->
+        <svg id="t-svg"></svg>
+        <!-- columns -->
+      </div>
+    </section>
+
+    <!-- 結果（公開用） -->
+    <section id="results-page" class="hidden">
+      <h2 class="section-title"><span class="dot"></span> 🏁 結果（公開用）</h2>
+
+      <div class="box">
+        <div class="result-toolbar">
+          <button class="btn btn-add" onclick="addResultSection()">＋ 種目を追加</button>
+          <span class="muted">（例：男子／女子／MIX のほか、学年別や学年対抗など自由に）</span>
+        </div>
+        <div id="resultsWrapper"></div>
+      </div>
+    </section>
+
+    <button class="btn btn-save" onclick="saveAll()">🎉 すべて保存する</button>
+  </main>
+  </div> <!-- /#app-root -->
+
+<script>
+// ======= 状態 =======
+let globalPdfData = null;
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('kyugi_sync') : null;
+
+// ======= ナビ切替 =======
+function showPage(pageId) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('btn-' + pageId.split('-')[0]).classList.add('active');
+  ['home-page','match-page','league-page','tournament-page','results-page'].forEach(id => {
+    document.getElementById(id).classList.toggle('hidden', id !== pageId);
+  });
+  const sec = document.getElementById(pageId);
+  if (sec && sec.animate){
+    sec.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], {duration:250, easing:'ease-out'});
+  }
+}
+
+// ======= PDF: アップロード＆削除 =======
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (file && file.type === 'application/pdf') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      globalPdfData = e.target.result;
+      displayPdf(globalPdfData);
+      togglePdfDeleteBtn(true);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+function displayPdf(data) { const v = document.getElementById('pdf-viewer'); v.src = data; v.style.display = 'block'; }
+function togglePdfDeleteBtn(show){
+  const btn = document.getElementById('pdf-delete-btn');
+  if (btn) btn.style.display = show ? 'inline-block' : 'none';
+}
+function removePdf(){
+  if(!confirm('アップロード済みの大会要項PDFを削除します。よろしいですか？')) return;
+  const v = document.getElementById('pdf-viewer');
+  if (v) { v.removeAttribute('src'); v.style.display = 'none'; }
+  globalPdfData = null;
+  const inp = document.getElementById('pdf-input'); if (inp) inp.value = '';
+  const key = 'kyugi_final_all_in_one';
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ saved = null; }
+  if (!saved) saved = {};
+  saved.pdf = null;
+  saved.updatedAt = new Date().toISOString();
+  localStorage.setItem(key, JSON.stringify(saved));
+  if (bc) bc.postMessage({ type:'updated', key, updatedAt: saved.updatedAt });
+  togglePdfDeleteBtn(false);
+  alert('PDFを削除しました（閲覧用ページにも反映されます）。');
+}
+
+// ======= 対戦表の作成 =======
+function createTimetable() {
+  const title = document.getElementById('ttName').value || '新規対戦';
+  const venuesInput = parseInt(document.getElementById('ttVenueCount').value);
+  const rows   = parseInt(document.getElementById('ttRows').value);
+
+  // ★ カンマ区切りのコート名を優先適用
+  const rawNames = (document.getElementById('ttVenueNames').value || '').trim();
+  let venueNames = [];
+  if (rawNames) {
+    venueNames = rawNames.split(/[,、\s]+/).map(s => s.trim()).filter(Boolean);
+  }
+  let venues = venuesInput;
+  if (venueNames.length) {
+    venues = venueNames.length; // 入力数を優先
+  }
+
+  const blockID = 'b' + Date.now();
+  const container = document.createElement('div');
+  container.className = 'box'; container.setAttribute('data-block-id', blockID);
+
+  let html = `
+<h3 contenteditable="true">${title}</h3><button class="btn btn-del" onclick="deleteBlock('${blockID}')">削除</button>`;
+  html += `<table><thead><tr><th rowspan="2">開始時間</th>`;
+  for(let v=1; v<=venues; v++) {
+    const cname = venueNames[v-1] || `コート${v}`;
+    html += `<th colspan="2"><span class="court-name" contenteditable="true" data-court="${v}">${escapeHtmlAttr(cname)}</span></th><th>審判</th>`;
+  }
+  html += `</tr><tr>`;
+  for(let v=1; v<=venues; v++) html += `<th colspan="2">カード・スコア</th><th>担当</th>`;
+  html += `</tr></thead><tbody>`;
+
+  let h=8, m=45;
+  for(let r=1; r<=rows; r++){
+    let tStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    html += `<tr><td><input type="time" class="tt-time" step="900" value="${tStr}"></td>`;
+    for(let v=1; v<=venues; v++){
+      html += `<td colspan="2"><div class="vs-grid">
+        <input class="team-name team-a" placeholder="チームA" oninput="updateLeague('${blockID}')">
+        <input type="number" class="score-input score-a" oninput="updateLeague('${blockID}')">
+        <span style="font-size:.8rem">VS</span>
+        <input type="number" class="score-input score-b" oninput="updateLeague('${blockID}')">
+        <input class="team-name team-b" placeholder="チームB" oninput="updateLeague('${blockID}')">
+      </div></td><td><input class="input" style="width:74px"></td>`;
+    }
+    html += `</tr>`;
+    m += 15; if(m>=60){ h++; m -= 60; }
+  }
+
+  container.innerHTML = html + `</tbody></table>`;
+  document.getElementById('matchWrapper').appendChild(container);
+
+  // 対応するリーグ表ボックスを作成
+  const div = document.createElement('div');
+  div.className = 'box'; div.id = 'league-' + blockID;
+  div.innerHTML = `<h3>${title} リーグ戦表</h3><div class="league-content"></div>`;
+  document.getElementById('leagueWrapper').appendChild(div);
+
+  popEffect(container);
+  wireTimeAutoFill(blockID);
+}
+function wireTimeAutoFill(id){
+  const block = document.querySelector(`[data-block-id="${id}"]`);
+  if(!block) return;
+  const times = block.querySelectorAll('.tt-time');
+  if(!times.length) return;
+  const first = times[0];
+  const handler = () => {
+    if(!first.value) return;
+    for(let i=1;i<times.length;i++){
+      times[i].value = addMinutes(first.value, 15*i);
+    }
+  };
+  first.addEventListener('input', handler);
+  first.addEventListener('change', handler);
+}
+function addMinutes(hhmm, add){
+  const [h,m] = hhmm.split(':').map(n=>parseInt(n,10));
+  const base = new Date(2000,0,1,h||0,m||0,0,0).getTime();
+  const d = new Date(base + add*60000);
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  return `${hh}:${mm}`;
+}
+
+// ======= リーグ戦 自動集計 =======
+function updateLeague(id){
+  const block = document.querySelector(`[data-block-id="${id}"]`);
+  const leagueBox = document.getElementById('league-' + id);
+  if(!block || !leagueBox) return;
+
+  let teams = [];
+  block.querySelectorAll('.team-name').forEach(i => {
+    let n = i.value.trim();
+    if(n && !["昼食","調整","休憩"].includes(n) && !teams.includes(n)) teams.push(n);
+  });
+  if(teams.length < 2) return;
+
+  let matches = [];
+  block.querySelectorAll('tr').forEach(tr => {
+    const tA = tr.querySelectorAll('.team-a'), tB = tr.querySelectorAll('.team-b');
+    const sA = tr.querySelectorAll('.score-a'), sB = tr.querySelectorAll('.score-b');
+    tA.forEach((ta, idx) => {
+      let a = ta.value.trim(), b = tB[idx].value.trim();
+      let sa = sA[idx].value, sb = sB[idx].value;
+      if(a && b && sa !== "" && sb !== "") matches.push({a, b, sa:parseInt(sa), sb:parseInt(sb)});
+    });
+  });
+
+  let stats = teams.map(name => {
+    let pts=0, diff=0, gs=0;
+    matches.forEach(m => {
+      if(m.a===name || m.b===name){
+        let s1 = (m.a===name)?m.sa:m.sb, s2 = (m.a===name)?m.sb:m.sa;
+        gs += s1; diff += (s1 - s2);
+        if(s1>s2) pts+=3; else if(s1===s2) pts+=1;
+      }
+    });
+    return {name, pts, diff, gs};
+  });
+
+  let sorted = [...stats].sort((a,b)=> (b.pts-a.pts) || (b.diff-a.diff) || (b.gs-a.gs));
+
+  let html = `<table><thead><tr><th>チーム名</th>`;
+  teams.forEach(t => html += `<th>対 ${t}</th>`);
+  html += `<th class="summary-col">勝ち点</th><th class="summary-col">得失差</th><th class="summary-col">順位</th></tr></thead><tbody>`;
+
+  teams.forEach((t1,i)=>{
+    let row = `<tr><td style="font-weight:900">${t1}</td>`;
+    teams.forEach((t2,j)=>{
+      if(i===j) row += `<td style="background:#f5f7fb"></td>`;
+      else {
+        let m = matches.find(x => (x.a===t1 && x.b===t2) || (x.a===t2 && x.b===t1));
+        let cell = "-";
+        if(m){
+          let s1 = (m.a===t1)?m.sa:m.sb, s2 = (m.a===t1)?m.sb:m.sa;
+          let sym = (s1>s2)?"○":(s1<s2?"×":"△");
+          cell = `<span class="res-symbol">${sym}</span><span class="res-score">${s1}-${s2}</span>`;
+        }
+        row += `<td>${cell}</td>`;
+      }
+    });
+    let s = stats.find(x => x.name===t1);
+    let r = sorted.findIndex(x => x.name===t1)+1;
+    row += `<td class="summary-col">${s.pts}</td><td class="summary-col">${s.diff}</td><td class="summary-col">${r}位</td></tr>`;
+    html += row;
+  });
+
+  leagueBox.querySelector('.league-content').innerHTML = html + `</tbody></table>`;
+}
+
+// ======= 共通操作 =======
+function deleteBlock(id){
+  if(confirm('削除しますか？')){
+    const b = document.querySelector(`[data-block-id="${id}"]`); if (b) b.remove();
+    const l = document.getElementById('league-' + id); if (l) l.remove();
+  }
+}
+
+// ======= 結果（自由編集UI） =======
+function addResultSection(initial){
+  const wrapper = document.getElementById('resultsWrapper');
+  const sid = 'rs_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+
+  const section = document.createElement('div');
+  section.className = 'result-section';
+  section.dataset.sectionId = sid;
+
+  const titleVal = initial?.title ?? '新しい種目';
+  const rows = Array.isArray(initial?.rows) && initial.rows.length
+    ? initial.rows
+    : [{rank:'優勝', value:''},{rank:'準優勝', value:''}];
+
+  section.innerHTML = `
+    <div class="result-head">
+      <div class="result-title">
+        <label><b>種目名：</b></label>
+        <input class="input" value="${escapeHtmlAttr(titleVal)}" placeholder="例：男子ドッジ／女子ドッジ／MIX／学年対抗など">
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-ghost" onclick="addRankRow('${sid}')">＋ 項目を追加</button>
+        <button class="btn btn-del" onclick="removeResultSection('${sid}')">🗑 種目を削除</button>
+      </div>
+    </div>
+    <table class="result-table">
+      <thead>
+        <tr><th style="width:200px">順位（ラベル）</th><th>内容（チーム名など）</th><th style="width:120px">操作</th></tr>
+      </thead>
+      <tbody id="tbody-${sid}"></tbody>
+    </table>
+  `;
+  wrapper.appendChild(section);
+
+  rows.forEach(r => addRankRow(sid, r));
+  popEffect(section);
+}
+function addRankRow(sectionId, initial){
+  const tbody = document.getElementById(`tbody-${sectionId}`);
+  if(!tbody) return;
+  const tr = document.createElement('tr');
+  tr.className = 'rank-row';
+  tr.innerHTML = `
+    <td><input class="input rank-label" value="${escapeHtmlAttr(initial?.rank ?? '')}" placeholder="例：優勝／準優勝／3位／敢闘賞など"></td>
+    <td><input class="input rank-value" value="${escapeHtmlAttr(initial?.value ?? '')}" placeholder="例：3年A組／教員チームA など"></td>
+    <td><button class="btn btn-del" onclick="this.closest('tr').remove()">削除</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+function removeResultSection(sectionId){
+  if(!confirm('この種目セクションを削除します。よろしいですか？')) return;
+  const sec = document.querySelector(`.result-section[data-section-id="${sectionId}"]`);
+  if(sec) sec.remove();
+}
+function collectResultsV2(){
+  const list = [];
+  document.querySelectorAll('.result-section').forEach(sec=>{
+    const title = sec.querySelector('.result-title input')?.value?.trim() || '';
+    const rows = [];
+    sec.querySelectorAll('.rank-row').forEach(tr=>{
+      const rank = tr.querySelector('.rank-label')?.value?.trim() || '';
+      const value = tr.querySelector('.rank-value')?.value?.trim() || '';
+      if(rank || value){ rows.push({rank, value}); }
+    });
+    if(title || rows.length){ list.push({ title, rows }); }
+  });
+  return list;
+}
+// 互換用
+function mapResultsLegacy(resultsV2){
+  const pick = (title) => resultsV2.find(s => (s.title || '').trim() === title);
+  const toLegacyGroup = (sec) => {
+    if(!sec) return undefined;
+    const val = (label) => (sec.rows.find(r => r.rank === label)?.value || '').trim();
+    const g = {};
+    if(val('優勝'))    g.champion = val('優勝');
+    if(val('準優勝'))  g.runnerUp = val('準優勝');
+    if(val('3位'))     g.third    = val('3位');
+    return Object.keys(g).length ? g : undefined;
+  };
+  const men   = toLegacyGroup(pick('男子'));
+  const women = toLegacyGroup(pick('女子'));
+  const mix   = toLegacyGroup(pick('MIX'));
+  const legacy = {};
+  if(men) legacy.men = men;
+  if(women) legacy.women = women;
+  if(mix) legacy.mix = mix;
+  return Object.keys(legacy).length ? legacy : undefined;
+}
+
+// ======= 保存 =======
+function saveAll(){
+  // 入力値をDOM属性へ固定
+  document.querySelectorAll('input:not([type="file"])').forEach(i => i.setAttribute('value', i.value));
+
+  const resultsV2 = collectResultsV2();
+  const legacy    = mapResultsLegacy(resultsV2);
+
+  const content = {
+    title: document.querySelector('header h1').innerText,
+    pdf: globalPdfData,
+    match: document.getElementById('matchWrapper').innerHTML,
+    league: document.getElementById('leagueWrapper').innerHTML,
+    tournament: document.getElementById('tournamentWrapper').innerHTML,
+    resultsV2: resultsV2,
+    results: legacy,
+    updatedAt: new Date().toISOString()
+  };
+
+  localStorage.setItem('kyugi_final_all_in_one', JSON.stringify(content));
+
+  if (bc) bc.postMessage({ type:'updated', key:'kyugi_final_all_in_one', updatedAt: content.updatedAt });
+
+  fireConfetti();
+  alert('すべての内容（PDF・対戦・順位・トーナメント・結果）を保存しました！');
+}
+
+// ======= 復元（解除後に呼ぶ） =======
+function initApp(){
+  const saved = JSON.parse(localStorage.getItem('kyugi_final_all_in_one') || 'null');
+  if(saved){
+    // タイトル
+    document.querySelector('header h1').innerText = saved.title || document.querySelector('header h1').innerText;
+    // PDF
+    if(saved.pdf){ globalPdfData = saved.pdf; displayPdf(saved.pdf); togglePdfDeleteBtn(true); }
+    else { togglePdfDeleteBtn(false); }
+    // HTML断片
+    document.getElementById('matchWrapper').innerHTML = saved.match || '';
+    document.getElementById('leagueWrapper').innerHTML = saved.league || '';
+    document.getElementById('tournamentWrapper').innerHTML = saved.tournament || '';
+
+    // 結果復元
+    if (Array.isArray(saved.resultsV2) && saved.resultsV2.length){
+      saved.resultsV2.forEach(sec => addResultSection(sec));
+    } else if (saved.results) {
+      const seed = [];
+      if (saved.results.men) {
+        const r = saved.results.men;
+        const rows = [];
+        if(r.champion) rows.push({rank:'優勝', value:r.champion});
+        if(r.runnerUp) rows.push({rank:'準優勝', value:r.runnerUp});
+        if(r.third)    rows.push({rank:'3位', value:r.third});
+        seed.push({ title:'男子', rows });
+      }
+      if (saved.results.women) {
+        const r = saved.results.women;
+        const rows = [];
+        if(r.champion) rows.push({rank:'優勝', value:r.champion});
+        if(r.runnerUp) rows.push({rank:'準優勝', value:r.runnerUp});
+        if(r.third)    rows.push({rank:'3位', value:r.third});
+        seed.push({ title:'女子', rows });
+      }
+      if (saved.results.mix) {
+        const r = saved.results.mix;
+        const rows = [];
+        if(r.champion) rows.push({rank:'優勝', value:r.champion});
+        if(r.runnerUp) rows.push({rank:'準優勝', value:r.runnerUp});
+        if(r.third)    rows.push({rank:'3位', value:r.third});
+        seed.push({ title:'MIX', rows });
+      }
+      if(seed.length){ seed.forEach(sec => addResultSection(sec)); }
+      else { addResultSection(); }
+    } else {
+      addResultSection();
+    }
+
+    // 読み込んだ対戦表の時間オートフィル再配線
+    document.querySelectorAll('[data-block-id]').forEach(block => {
+      const id = block.getAttribute('data-block-id');
+      wireTimeAutoFill(id);
+    });
+
+    // ★ トーナメント復元後の再配線＆再描画
+    wireTournamentAfterRestore();
+
+  } else {
+    togglePdfDeleteBtn(false);
+    addResultSection();
+  }
+}
+
+// ======= 演出 =======
+function popEffect(target){
+  const r = document.createElement('span');
+  r.style.position='absolute'; r.style.pointerEvents='none'; r.style.left='50%'; r.style.top='0'; r.style.transform='translate(-50%,-50%)';
+  r.style.width='12px'; r.style.height='12px'; r.style.border='3px solid ' + getComputedStyle(document.documentElement).getPropertyValue('--accent');
+  r.style.borderRadius='999px'; r.style.opacity='.7'; target.style.position='relative'; target.appendChild(r);
+  r.animate([{transform:'translate(-50%,-50%) scale(.6)', opacity:.9},{transform:'translate(-50%,-50%) scale(20)', opacity:0}],{duration:700,easing:'cubic-bezier(.16,.84,.44,1)'}).onfinish=()=>r.remove();
+}
+function fireConfetti(){
+  const colors = ['#0a3d8f','#204da3','#ffd24c','#2ec4b6','#9ec5ff'];
+  const pieces = 120; const body = document.body; const frag = document.createDocumentFragment();
+  for(let i=0;i<pieces;i++){
+    const d = document.createElement('div');
+    d.style.position='fixed'; d.style.top='-10px'; d.style.left=Math.random()*100+'%';
+    d.style.width=d.style.height=(8+Math.random()*8)+'px';
+    d.style.background=colors[i%colors.length]; d.style.transform='rotate('+Math.random()*360+'deg)';
+    d.style.borderRadius = Math.random()>.6 ? '50%' : '2px';
+    d.style.zIndex='9999';
+    const fall = d.animate([
+      { transform:`translateY(0) rotate(0deg)` },
+      { transform:`translateY(${window.innerHeight+40}px) rotate(${360+Math.random()*360}deg)` }
+    ], { duration: 1400+Math.random()*900, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    fall.onfinish = ()=> d.remove(); frag.appendChild(d);
+  }
+  body.appendChild(frag);
+}
+
+// ======= ユーティリティ =======
+function escapeHtmlAttr(s){
+  return (s ?? '').toString()
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+/* ======= ロック画面（既存） ======= */
+const PASSWORD_PLAIN = 'hgstaiikuka';
+function unlockApp(){
+  const overlay = document.getElementById('lock-overlay');
+  const app = document.getElementById('app-root');
+  overlay.style.display = 'none';
+  app.style.visibility = 'visible';
+  initApp();
+}
+function handleSubmit(){
+  const input = document.getElementById('lock-input');
+  const msg = document.getElementById('lock-msg');
+  const card = document.getElementById('lock-card');
+  const val = (input.value || '').trim();
+
+  if(val === PASSWORD_PLAIN){
+    sessionStorage.setItem('hgs_unlock', '1');
+    unlockApp();
+  } else {
+    msg.textContent = 'パスワードが違います';
+    card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    input.focus(); input.select();
+  }
+}
+function bootLockScreen(){
+  const overlay = document.getElementById('lock-overlay');
+  const app = document.getElementById('app-root');
+  app.style.visibility = 'hidden';
+  overlay.style.display = 'flex';
+
+  const input = document.getElementById('lock-input');
+  const btn = document.getElementById('lock-submit');
+  const eye = document.getElementById('eye-toggle');
+  const caps = document.getElementById('caps-hint');
+
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
+    if (e.getModifierState && e.getModifierState('CapsLock')) {
+      caps.style.display = 'inline';
+    } else {
+      caps.style.display = 'none';
+    }
+  });
+  btn.addEventListener('click', handleSubmit);
+
+  eye.addEventListener('click', () => {
+    const isPwd = input.type === 'password';
+    input.type = isPwd ? 'text' : 'password';
+    eye.textContent = isPwd ? '🙈 非表示' : '👁 表示';
+    eye.setAttribute('aria-pressed', String(isPwd));
+    input.focus();
+  });
+
+  setTimeout(()=>input.focus(), 50);
+}
+
+// ページロード：同一タブで解錠済みなら即表示
+window.addEventListener('load', () => {
+  const unlocked = sessionStorage.getItem('hgs_unlock') === '1';
+  if (unlocked) {
+    document.getElementById('lock-overlay').style.display = 'none';
+    document.getElementById('app-root').style.visibility = 'visible';
+    initApp();
+  } else {
+    bootLockScreen();
+  }
+});
+
+/* =========================
+   決勝トーナメント（強化版）
+   - クリックで勝者確定→赤線で進行
+   - スコア欄あり・自動判定
+   - BYE自動進行
+========================= */
+
+/* 2の冪を算出（スロット補正用） */
+function nextPow2(n){ let p=1; while(p<n) p<<=1; return p; }
+
+/* マッチ要素を生成 */
+function buildMatchEl(id, nameA, nameB, readOnlyNames){
+  const wrap = document.createElement('div');
+  wrap.className = 'match-wrap';
+  const box = document.createElement('div');
+  box.className = 't-match';
+  box.id = id;
+
+  box.innerHTML = `
+    <div class="t-row rowA">
+      <button class="t-win btnA" title="勝ちにする">◎</button>
+      <div class="t-name"><input class="nameA" ${readOnlyNames?'readonly':''} value="${escapeHtmlAttr(nameA)}" placeholder="チームA"></div>
+      <input class="t-score scoreA" type="number" min="0" />
+    </div>
+    <div class="t-row rowB">
+      <button class="t-win btnB" title="勝ちにする">◎</button>
+      <div class="t-name"><input class="nameB" ${readOnlyNames?'readonly':''} value="${escapeHtmlAttr(nameB)}" placeholder="チームB"></div>
+      <input class="t-score scoreB" type="number" min="0" />
+    </div>
+  `;
+  wrap.appendChild(box);
+  return wrap;
+}
+
+/* クリック・スコア自動判定の配線 */
+function wireTournamentEvents(){
+  document.querySelectorAll('.t-match').forEach(match=>{
+    const btnA = match.querySelector('.btnA');
+    const btnB = match.querySelector('.btnB');
+    const sA = match.querySelector('.scoreA');
+    const sB = match.querySelector('.scoreB');
+
+    btnA.addEventListener('click', ()=> setWinner(match.id, 'A'));
+    btnB.addEventListener('click', ()=> setWinner(match.id, 'B'));
+
+    const auto = ()=>{
+      const va = sA.value.trim(), vb = sB.value.trim();
+      if(va!=='' && vb!==''){
+        const na = Number(va), nb = Number(vb);
+        if(!Number.isNaN(na) && !Number.isNaN(nb) && na!==nb){
+          setWinner(match.id, na>nb?'A':'B');
+        }
+      }
+    };
+    sA.addEventListener('input', auto);
+    sB.addEventListener('input', auto);
+  });
+}
+
+/* 勝者設定→上位へ反映＋赤線ハイライト */
+function setWinner(matchId, side){
+  const match = document.getElementById(matchId);
+  if(!match) return;
+
+  match.querySelector('.rowA').classList.toggle('win', side==='A');
+  match.querySelector('.rowB').classList.toggle('win', side==='B');
+  match.dataset.winner = side;
+
+  // 親マッチへ勝者名を反映
+  const parentId = match.dataset.parentId;
+  const parentSlot = match.dataset.parentSlot; // 'A' or 'B'
+  if(parentId && parentSlot){
+    const name = (side==='A')
+      ? match.querySelector('.nameA').value
+      : match.querySelector('.nameB').value;
+    const parent = document.getElementById(parentId);
+    if(parent){
+      const input = parent.querySelector(`.name${parentSlot}`);
+      if(input){ input.value = name; input.setAttribute('value', name); }
+      // 親側の小アームも赤に
+      const arm = document.getElementById(`arm_${match.id}`);
+      if(arm){ arm.classList.add('active'); }
+    }
+  }
+
+  // 赤い本線をON（兄弟の赤はオフ）
+  const conn = document.getElementById(`conn_${match.id}`);
+  if(conn){
+    const siblings = conn.parentElement.querySelectorAll(`[data-parent="${conn.getAttribute('data-parent')}"]`);
+    siblings.forEach(el=>el.classList.remove('active'));
+    conn.classList.add('active');
+  }
+}
+
+/* BYE（シード）自動進行 */
+function autoAdvanceBYE(){
+  const isBye = (s)=>!s || s==='(シード)';
+  document.querySelectorAll('.t-match').forEach(m=>{
+    const a = m.querySelector('.nameA')?.value?.trim();
+    const b = m.querySelector('.nameB')?.value?.trim();
+    if(isBye(a) && !isBye(b)) setWinner(m.id, 'B');
+    if(!isBye(a) && isBye(b)) setWinner(m.id, 'A');
+  });
+}
+
+/* L字コネクタ描画（子→親） */
+function drawConnectors(){
+  const wrapper = document.getElementById('tournamentWrapper');
+  const svg = document.getElementById('t-svg');
+  if(!wrapper || !svg) return;
+  svg.setAttribute('width', wrapper.scrollWidth);
+  svg.setAttribute('height', wrapper.scrollHeight);
+  svg.innerHTML = '';
+
+  const children = Array.from(document.querySelectorAll('.t-match')).filter(m => m.dataset.parentId);
+  children.forEach(child=>{
+    const parent = document.getElementById(child.dataset.parentId);
+    if(!parent) return;
+
+    const base = wrapper.getBoundingClientRect();
+    const cr = child.getBoundingClientRect();
+    const pr = parent.getBoundingClientRect();
+
+    const x1 = cr.right - base.left;
+    const y1 = cr.top + cr.height/2 - base.top;
+
+    const x2 = pr.left - base.left;
+    const y2 = pr.top + pr.height/2 - base.top;
+
+    const midX = (x1 + x2)/2;
+
+    // 灰パス
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    svg.appendChild(g);
+    const pathGray = document.createElementNS('http://www.w3.org/2000/svg','path');
+    pathGray.setAttribute('d', `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`);
+    pathGray.setAttribute('class','conn');
+    pathGray.setAttribute('data-parent', parent.id);
+    g.appendChild(pathGray);
+
+    // 赤パス（本線）
+    const pathRed = document.createElementNS('http://www.w3.org/2000/svg','path');
+    pathRed.setAttribute('d', `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`);
+    pathRed.setAttribute('class','conn');
+    pathRed.id = `conn_${child.id}`;
+    pathRed.setAttribute('data-parent', parent.id);
+    g.appendChild(pathRed);
+
+    // 親寄りの小アーム
+    const arm = document.createElementNS('http://www.w3.org/2000/svg','path');
+    arm.setAttribute('d', `M ${midX} ${y2} L ${x2} ${y2}`);
+    arm.setAttribute('class','conn');
+    arm.id = `arm_${child.id}`;
+    arm.setAttribute('data-parent', parent.id);
+    g.appendChild(arm);
+
+    // 既に勝者が設定されていたら赤ON
+    if(child.dataset.winner){
+      pathRed.classList.add('active');
+      arm.classList.add('active');
+    }
+  });
+}
+
+/* 復元時：イベント再配線＆線再描画 */
+function wireTournamentAfterRestore(){
+  // 復元HTMLからイベントを再接続
+  wireTournamentEvents();
+  // 子→親のid情報（data-parentId等）が残っている場合、線を再描画
+  requestAnimationFrame(drawConnectors);
+  window.addEventListener('resize', drawConnectors);
+}
+
+/* ======= トーナメント 生成（刷新） ======= */
+function generateFlexibleBracket(){
+  const count = Math.max(2, parseInt(document.getElementById('t-count-input').value || '0', 10));
+
+  const wrapper = document.getElementById('tournamentWrapper');
+  wrapper.innerHTML = '<svg id="t-svg"></svg>'; // SVGリセット
+
+  const rounds = Math.ceil(Math.log2(count));
+  const slots = 1 << rounds; // 2^rounds
+  const names = [];
+  for(let i=0;i<slots;i++){
+    if(i < count) names.push(`チーム${i+1}`);
+    else names.push('(シード)');
+  }
+
+  // ラウンド列を作成
+  const columns = [];
+  for(let r=0; r<rounds; r++){
+    const col = document.createElement('div');
+    col.className = 'bracket-column';
+    col.dataset.round = r;
+    // 見出し
+    const title = document.createElement('div');
+    title.style.fontWeight = '900'; title.style.color = '#0a3d8f'; title.style.marginBottom = '6px';
+    title.textContent = (r===rounds-1) ? '決勝' : (rounds>=3 && r===rounds-2 ? '準決勝' : (rounds>=4 && r===rounds-3 ? '準々決勝' : `ラウンド${r+1}`));
+    col.appendChild(title);
+
+    wrapper.appendChild(col);
+    columns.push(col);
+  }
+
+  // ラウンド0（1回戦）
+  const r0Matches = [];
+  for(let m=0; m<slots/2; m++){
+    const id = `match_0_${m}`;
+    const a = names[2*m], b = names[2*m+1];
+    const node = buildMatchEl(id, a, b, false);
+    columns[0].appendChild(node);
+    r0Matches.push(node.querySelector('.t-match'));
+  }
+
+  // 以降のラウンド
+  let prev = r0Matches;
+  for(let r=1; r<rounds; r++){
+    const curr = [];
+    const countThis = slots >> r; // 試合数
+    for(let m=0; m<countThis/2; m++){
+      const id = `match_${r}_${m}`;
+      const node = buildMatchEl(id, '', '', true);
+      columns[r].appendChild(node);
+      const tm = node.querySelector('.t-match');
+      // 子⇔親リンク
+      const childA = prev[m*2], childB = prev[m*2+1];
+      childA.dataset.parentId = id; childA.dataset.parentSlot = 'A';
+      childB.dataset.parentId = id; childB.dataset.parentSlot = 'B';
+      curr.push(tm);
+    }
+    prev = curr;
+  }
+
+  // イベント配線＆BYE処理
+  wireTournamentEvents();
+  autoAdvanceBYE();
+
+  // 線の描画
+  requestAnimationFrame(drawConnectors);
+  window.addEventListener('resize', drawConnectors);
+
+  popEffect(wrapper);
+}
+</script>
+</body>
+</html>
